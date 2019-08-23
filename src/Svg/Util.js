@@ -32,8 +32,7 @@ exports.domToSvgCoordinates = function (svg) {
 
     return {
       x: svgCoordPoint.x,
-      y: svgCoordPoint.y,
-      z: 0
+      y: svgCoordPoint.y
     };
   };
 }
