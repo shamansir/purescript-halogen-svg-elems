@@ -3,8 +3,6 @@ dist: trusty
 sudo: required
 node_js: 8
 install:
-  - npm install -g psc-package pulp purescript@">=0.12 <0.13"
-  - npm install
+  - npm install -g spago purescript
 script:
-  - pulp --version
-  - npm test
+  - spago test
