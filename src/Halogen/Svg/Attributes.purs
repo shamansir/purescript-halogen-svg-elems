@@ -5,7 +5,7 @@ import Prelude
 import Data.Maybe (Maybe(..), maybe)
 import Data.String (joinWith, toUpper)
 
-import Core as Core
+import Halogen.Svg.Core as Core
 
 import Halogen.HTML.Core (Prop, AttrName(AttrName), Namespace(Namespace))
 import Halogen.HTML.Properties (IProp, attrNS)
