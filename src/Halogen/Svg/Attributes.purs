@@ -1,4 +1,4 @@
-module Svg.Attributes where
+module Halogen.Svg.Attributes where
 -- Like Halogen.HTML.Properties
 
 import Prelude
