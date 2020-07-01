@@ -15,9 +15,10 @@ data Color = RGB Int Int Int
            | RGBA Int Int Int Number
 
 printColor :: Maybe Color -> String
-printColor (Just (RGB r g b)) = "rgb(" <> (joinWith "," $ map show [r, g, b]) <> ")"
-printColor (Just (RGBA r g b o)) = "rgba(" <> (joinWith "," $ map show [r, g, b]) <> "," <> show o <> ")"
-printColor Nothing = "None"
+printColor = case _ of
+  Just (RGB r g b) -> "rgb(" <> (joinWith "," $ map show [r, g, b]) <> ")"
+  Just (RGBA r g b o) -> "rgba(" <> (joinWith "," $ map show [r, g, b]) <> "," <> show o <> ")"
+  Nothing -> "None"
 
 data Transform
   = Matrix Number Number Number Number Number Number
@@ -47,21 +48,22 @@ data CSSLength
   | Nil
 
 instance showCSSLength :: Show CSSLength where
-  show (Cm i) = (show i) <> "cm"
-  show (Mm i) = (show i) <> "mm"
-  show (Inches i) = (show i) <> "in"
-  show (Px i) = (show i) <> "px"
-  show (Pt i) = (show i) <> "pt"
-  show (Pc i) = (show i) <> "pc"
-  show (Em i) = (show i) <> "em"
-  show (Ex i) = (show i) <> "ex"
-  show (Rem i) = (show i) <> "rem"
-  show (Vw i) = (show i) <> "vw"
-  show (Vh i) = (show i) <> "vh"
-  show (Vmin i) = (show i) <> "vmin"
-  show (Vmax i) = (show i) <> "vmax"
-  show (Pct i) = (show i) <> "%"
-  show Nil = "0"
+  show = case _ of
+    Cm i -> (show i) <> "cm"
+    Mm i -> (show i) <> "mm"
+    Inches i -> (show i) <> "in"
+    Px i -> (show i) <> "px"
+    Pt i -> (show i) <> "pt"
+    Pc i -> (show i) <> "pc"
+    Em i -> (show i) <> "em"
+    Ex i -> (show i) <> "ex"
+    Rem i -> (show i) <> "rem"
+    Vw i -> (show i) <> "vw"
+    Vh i -> (show i) <> "vh"
+    Vmin i -> (show i) <> "vmin"
+    Vmax i -> (show i) <> "vmax"
+    Pct i -> (show i) <> "%"
+    Nil -> "0"
 
 data FontSize
   = XXSmall
@@ -100,16 +102,17 @@ printMarkerUnit UserSpaceOnUse = "userSpaceOnUse"
 printMarkerUnit StrokeWidth = "strokeWidth"
 
 instance showFontSize :: Show FontSize where
-  show XXSmall = "xx-small"
-  show XSmall = "x-small"
-  show Small = "small"
-  show Medium = "medium"
-  show Large = "large"
-  show XLarge = "x-large"
-  show XXLarge = "xx-large"
-  show Smaller = "smaller"
-  show Larger = "larger"
-  show (FontSizeLength l) = show l
+  show = case _ of
+    XXSmall -> "xx-small"
+    XSmall -> "x-small"
+    Small -> "small"
+    Medium -> "medium"
+    Large -> "large"
+    XLarge -> "x-large"
+    XXLarge -> "xx-large"
+    Smaller -> "smaller"
+    Larger -> "larger"
+    FontSizeLength l -> show l
 
 printTextAnchor :: TextAnchor -> String
 printTextAnchor Start = "start"
@@ -121,29 +124,37 @@ data Baseline
   | Mathematical | Central | BaselineMiddle | TextAfterEdge | TextBeforeEdge
 
 printBaseline :: Baseline -> String
-printBaseline Auto = "auto"
-printBaseline UseScript = "use-script"
-printBaseline NoChange = "no-change"
-printBaseline ResetSize = "reset-size"
-printBaseline Ideographic = "ideographic"
-printBaseline Alphabetic = "alphabetic"
-printBaseline Hanging = "hanging"
-printBaseline Mathematical = "mathematical"
-printBaseline Central = "central"
-printBaseline BaselineMiddle = "middle"
-printBaseline TextAfterEdge = "text-after-edge"
-printBaseline TextBeforeEdge = "text-before-edge"
+printBaseline = case _ of
+  Auto -> "auto"
+  UseScript -> "use-script"
+  NoChange -> "no-change"
+  ResetSize -> "reset-size"
+  Ideographic -> "ideographic"
+  Alphabetic -> "alphabetic"
+  Hanging -> "hanging"
+  Mathematical -> "mathematical"
+  Central -> "central"
+  BaselineMiddle -> "middle"
+  TextAfterEdge -> "text-after-edge"
+  TextBeforeEdge -> "text-before-edge"
 
 printTransform :: Transform -> String
-printTransform (Matrix a b c d e f) =
-  "matrix(" <> (joinWith "," $ map show [a, b, c, d, e, f]) <> ")"
-printTransform (Translate x y) = "translate(" <> (joinWith "," $ map show [x, y]) <> ")"
-printTransform (Scale x y) = "scale(" <> (joinWith "," $ map show [x, y]) <> ")"
-printTransform (Rotate a x y) = "rotate(" <> (joinWith "," $ map show [a, x, y]) <> ")"
-printTransform (SkewX a) = "skewX(" <> show a <> ")"
-printTransform (SkewY a) = "skewY(" <> show a <> ")"
+printTransform = case _ of
+  Matrix a b c d e f ->
+    "matrix(" <> (joinWith "," $ map show [a, b, c, d, e, f]) <> ")"
+  Translate x y ->
+    "translate(" <> (joinWith "," $ map show [x, y]) <> ")"
+  Scale x y ->
+    "scale(" <> (joinWith "," $ map show [x, y]) <> ")"
+  Rotate a x y ->
+    "rotate(" <> (joinWith "," $ map show [a, x, y]) <> ")"
+  SkewX a ->
+    "skewX(" <> show a <> ")"
+  SkewY a ->
+    "skewY(" <> show a <> ")"
 
 data D = Rel Command | Abs Command
+
 printD :: D -> String
 printD (Abs cmd) = (toUpper p.command) <> p.params
   where p = printCommand cmd
@@ -161,36 +172,43 @@ data Command
   | Z
 
 printCommand :: Command -> {command :: String, params :: String}
-printCommand (M x y) = {command: "m", params: joinWith "," $ map show [x, y]}
-printCommand (L x y) = {command: "l", params: joinWith "," $ map show [x, y]}
-printCommand (C x1 y1 x2 y2 x y) =
-  {command: "c" , params: joinWith "," $ map show [x1, y1, x2, y2, x, y]}
-printCommand (S x2 y2 x y) =
-  {command: "s" , params: joinWith "," $ map show [x2, y2, x, y]}
-printCommand (Q x1 y1 x y) =
-  {command: "q" , params: joinWith "," $ map show [x1, y1, x, y]}
-printCommand (T x y) = {command: "t", params: joinWith "," $ map show [x, y]}
-printCommand (A rx ry rot large sweep x y) =
-  {command: "a", params: joinWith ","
+printCommand = case _ of
+  M x y ->
+    {command: "m", params: joinWith "," $ map show [x, y]}
+  L x y ->
+    {command: "l", params: joinWith "," $ map show [x, y]}
+  C x1 y1 x2 y2 x y ->
+    {command: "c" , params: joinWith "," $ map show [x1, y1, x2, y2, x, y]}
+  S x2 y2 x y ->
+    {command: "s" , params: joinWith "," $ map show [x2, y2, x, y]}
+  Q x1 y1 x y ->
+    {command: "q" , params: joinWith "," $ map show [x1, y1, x, y]}
+  T x y ->
+    {command: "t", params: joinWith "," $ map show [x, y]}
+  A rx ry rot large sweep x y ->
+    {command: "a", params: joinWith ","
                  $ map show [ rx, ry, rot ]
                  <> [ large_flag, sweep_flag ]
                  <> map show [ x, y ]}
-  where
-  large_flag = if large then "0" else "1"
-  sweep_flag = if sweep then "0" else "1"
-printCommand Z = {command: "z", params: ""}
+    where
+    large_flag = if large then "0" else "1"
+    sweep_flag = if sweep then "0" else "1"
+  Z -> {command: "z", params: ""}
 
 data Align = Min | Mid | Max
 
 printAlign :: Align -> String
-printAlign Min = "Min"
-printAlign Mid = "Mid"
-printAlign Max = "Max"
+printAlign = case _ of
+  Min -> "Min"
+  Mid -> "Mid"
+  Max -> "Max"
 
 data MeetOrSlice = Meet | Slice
+
 printMeetOrSlice :: MeetOrSlice -> String
-printMeetOrSlice Meet = "meet"
-printMeetOrSlice Slice = "slice"
+printMeetOrSlice = case _ of
+  Meet -> "meet"
+  Slice -> "slice"
 
 attr :: forall r i. AttrName -> String -> IProp r i
 attr = coe Core.attr
