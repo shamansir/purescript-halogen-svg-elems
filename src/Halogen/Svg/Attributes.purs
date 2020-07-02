@@ -98,8 +98,9 @@ instance showMarkerUnit :: Show MarkerUnit where
   show StrokeWidth = "strokeWidth"
 
 printMarkerUnit :: MarkerUnit -> String
-printMarkerUnit UserSpaceOnUse = "userSpaceOnUse"
-printMarkerUnit StrokeWidth = "strokeWidth"
+printMarkerUnit = case _ of
+  UserSpaceOnUse -> "userSpaceOnUse"
+  StrokeWidth -> "strokeWidth"
 
 instance showFontSize :: Show FontSize where
   show = case _ of
@@ -115,9 +116,10 @@ instance showFontSize :: Show FontSize where
     FontSizeLength l -> show l
 
 printTextAnchor :: TextAnchor -> String
-printTextAnchor Start = "start"
-printTextAnchor AnchorMiddle = "middle"
-printTextAnchor End = "end"
+printTextAnchor = case _ of
+  Start -> "start"
+  AnchorMiddle -> "middle"
+  End -> "end"
 
 data Baseline
   = Auto | UseScript | NoChange | ResetSize | Ideographic | Alphabetic | Hanging
@@ -156,10 +158,13 @@ printTransform = case _ of
 data D = Rel Command | Abs Command
 
 printD :: D -> String
-printD (Abs cmd) = (toUpper p.command) <> p.params
-  where p = printCommand cmd
-printD (Rel cmd) = p.command <> p.params
-  where p = printCommand cmd
+printD = case _ of
+  Abs cmd -> do
+    let p = printCommand cmd
+    (toUpper p.command) <> p.params
+  Rel cmd -> do
+    let p = printCommand cmd
+    p.command <> p.params
 
 data Command
   = M Number Number
