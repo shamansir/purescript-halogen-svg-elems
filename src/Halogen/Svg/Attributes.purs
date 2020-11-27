@@ -417,9 +417,14 @@ font_size = attr (AttrName "font-size") <<< show
 dominant_baseline :: forall r i . Baseline -> IProp (transform :: String | r) i
 dominant_baseline = attr (AttrName "dominant-baseline") <<< printBaseline
 
--- TODO shouldn't this be 'classes' taking an (Array Classname), like the rest of Halogen?
 class_ :: forall r i . String -> IProp (class :: String | r) i
 class_ = attr (AttrName "class")
+
+classes :: forall r i . Array ClassName -> IProp (class :: String | r) i
+classes = attr (AttrName "class") <<< joinWith " " <<< unwrapNewtype
+  where
+    unwrapNewtype :: Array ClassName -> Array String
+    unwrapNewtype = unsafeCoerce
 
 id :: forall r i . String -> IProp (id :: String | r) i
 id = attr (AttrName "id")
