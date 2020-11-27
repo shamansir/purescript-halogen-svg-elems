@@ -43,6 +43,7 @@ module Halogen.Svg.Attributes
   , font_size
   , dominant_baseline
   , class_
+  , classes
   , id
   , markerWidth, markerHeight
   , refX, refY
