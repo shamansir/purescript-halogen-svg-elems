@@ -71,6 +71,7 @@ module Halogen.Svg.Attributes
 
 import Prelude
 import Data.Maybe (Maybe(..), maybe)
+import Data.Newtype (un)
 import Data.String (joinWith, toUpper)
 
 import Halogen.Svg.Core as Core
@@ -417,8 +418,8 @@ font_size = attr (AttrName "font-size") <<< show
 dominant_baseline :: forall r i . Baseline -> IProp (transform :: String | r) i
 dominant_baseline = attr (AttrName "dominant-baseline") <<< printBaseline
 
-class_ :: forall r i . String -> IProp (class :: String | r) i
-class_ = attr (AttrName "class")
+class_ :: forall r i . ClassName -> IProp (class :: String | r) i
+class_ = attr (AttrName "class") <<< un ClassName
 
 classes :: forall r i . Array ClassName -> IProp (class :: String | r) i
 classes = attr (AttrName "class") <<< joinWith " " <<< unwrapNewtype
