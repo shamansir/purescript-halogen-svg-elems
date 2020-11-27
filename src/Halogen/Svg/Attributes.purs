@@ -1,4 +1,68 @@
-module Halogen.Svg.Attributes where
+module Halogen.Svg.Attributes
+  ( Color(..)
+  , printColor
+  , Transform(..)
+  , TextAnchor(..)
+  , CSSLength(..)
+  , FontSize(..)
+  , Orient(..)
+  , printOrient
+  , MarkerUnit(..)
+  , printMarkerUnit
+  , printTextAnchor
+  , Baseline(..)
+  , printBaseline
+  , printTransform
+  , PathCommand -- constructor not exported
+  , printPathCommand
+  , CommandPositionReference(..)
+  , m, l, h, v, c, s, q, t, a, z
+  , Align(..)
+  , printAlign
+  , MeetOrSlice(..)
+  , printMeetOrSlice
+  , attr
+  , cx, cy
+  , r
+  , viewBox
+  , preserveAspectRatio
+  , rx, ry
+  , width, height
+  , x, y
+  , x1, y1
+  , x2, y2
+  , stroke
+  , fill
+  , transform
+  , d
+  , text_anchor
+  , font_size
+  , dominant_baseline
+  , class_
+  , id
+  , markerWidth, markerHeight
+  , refX, refY
+  , orient
+  , markerUnits
+  , strokeWidth
+  , markerEnd
+  , DurationF(..)
+  , printDurationF
+  , Duration
+  , printDuration
+  , seconds
+  , FillState(..)
+  , printFillState
+  , dur
+  , attributeName
+  , from, to
+  , begin
+  , repeatCount
+  , fillAnim
+  , xlinkHref
+  , path
+  )
+  where
 -- Like Halogen.HTML.Properties
 
 import Prelude
@@ -113,7 +177,7 @@ instance showFontSize :: Show FontSize where
     XXLarge -> "xx-large"
     Smaller -> "smaller"
     Larger -> "larger"
-    FontSizeLength l -> show l
+    FontSizeLength l_ -> show l_
 
 printTextAnchor :: TextAnchor -> String
 printTextAnchor = case _ of
@@ -155,56 +219,68 @@ printTransform = case _ of
   SkewY a_ ->
     "skewY(" <> show a_ <> ")"
 
-data D = Rel Command | Abs Command
+newtype PathCommand = PathCommand String
 
-printD :: D -> String
-printD = case _ of
-  Abs cmd -> do
-    let p = printCommand cmd
-    (toUpper p.command) <> p.params
-  Rel cmd -> do
-    let p = printCommand cmd
-    p.command <> p.params
+printPathCommand :: PathCommand -> String
+printPathCommand (PathCommand s_) = s_
 
-data Command
-  = M Number Number
-  | L Number Number
-  | H Number
-  | V Number
-  | C Number Number Number Number Number Number
-  | S Number Number Number Number
-  | Q Number Number Number Number
-  | T Number Number
-  | A Number Number Number Boolean Boolean Number Number
-  | Z
+data CommandPositionReference = Rel | Abs
 
-printCommand :: Command -> {command :: String, params :: String}
-printCommand = case _ of
-  M x_ y_ ->
-    {command: "m", params: joinWith "," $ map show [x_, y_]}
-  L x_ y_ ->
-    {command: "l", params: joinWith "," $ map show [x_, y_]}
-  H x_ ->
-    {command: "h", params: show x_ }
-  V y_ ->
-    {command: "v", params: show y_ }
-  C x1_ y1_ x2_ y2_ x_ y_ ->
-    {command: "c" , params: joinWith "," $ map show [x1_, y1_, x2_, y2_, x_, y_]}
-  S x2_ y2_ x_ y_ ->
-    {command: "s" , params: joinWith "," $ map show [x2_, y2_, x_, y_]}
-  Q x1_ y1_ x_ y_ ->
-    {command: "q" , params: joinWith "," $ map show [x1_, y1_, x_, y_]}
-  T x_ y_ ->
-    {command: "t", params: joinWith "," $ map show [x_, y_]}
-  A rx_ ry_ rot large sweep x_ y_ ->
-    {command: "a", params: joinWith ","
-                 $ map show [ rx_, ry_, rot ]
-                 <> [ large_flag, sweep_flag ]
-                 <> map show [ x_, y_ ]}
-    where
-    large_flag = if large then "0" else "1"
-    sweep_flag = if sweep then "0" else "1"
-  Z -> {command: "z", params: ""}
+-- For internal use. Do not export.
+renderCommand :: CommandPositionReference -> String -> String
+renderCommand cmd s_ = case cmd of
+  Rel -> s_
+  Abs -> toUpper s_
+
+-- For internal use. Do not export.
+renderCommand1Arg :: String -> CommandPositionReference -> Number -> PathCommand
+renderCommand1Arg s_ ref a_ = PathCommand $ (renderCommand ref s_) <> show a_
+
+-- For internal use. Do not export.
+renderCommand2Args :: String -> CommandPositionReference -> Number -> Number -> PathCommand
+renderCommand2Args s_ ref a_ b =
+  PathCommand $ (renderCommand ref s_) <> show a_ <> ", " <> show b
+
+-- For internal use. Do not export.
+renderCommand4Args :: String -> CommandPositionReference -> Number -> Number -> Number -> Number -> PathCommand
+renderCommand4Args s_ ref a_ b c_ d_ =
+  PathCommand $ (renderCommand ref s_) <>
+    show a_ <> ", " <> show b <> ", " <> show c_ <> ", " <> show d_
+
+m :: CommandPositionReference -> Number -> Number -> PathCommand
+m = renderCommand2Args "m"
+
+l :: CommandPositionReference -> Number -> Number -> PathCommand
+l = renderCommand2Args "l"
+
+h :: CommandPositionReference -> Number -> PathCommand
+h = renderCommand1Arg "h"
+
+v :: CommandPositionReference -> Number -> PathCommand
+v = renderCommand1Arg "v"
+
+c :: CommandPositionReference -> Number -> Number -> Number -> Number -> Number -> Number -> PathCommand
+c ref x1_ y1_ x2_ y2_ x_ y_ = PathCommand $ (renderCommand ref "c") <>
+    show x1_ <> ", " <> show y1_ <> ", " <> show x2_ <> ", " <> show y2_ <>
+    show x_ <> ", " <> show y_
+
+s :: CommandPositionReference -> Number -> Number -> Number -> Number -> PathCommand
+s = renderCommand4Args "s"
+
+q :: CommandPositionReference -> Number -> Number -> Number -> Number -> PathCommand
+q = renderCommand4Args "q"
+
+t :: CommandPositionReference -> Number -> Number -> PathCommand
+t = renderCommand2Args "t"
+
+a :: CommandPositionReference -> Number -> Number -> Number -> Boolean -> Boolean -> Number -> Number -> PathCommand
+a ref rx_ ry_ rot large sweep x_ y_ = PathCommand $ (renderCommand ref "a") <>
+  show rx_ <> ", " <> show ry_ <> ", " <> show rot <>
+  (if large then "0" else "1") <> " " <> (if sweep then "0" else "1") <>
+  show x_ <> " " <> show y_
+
+z :: PathCommand
+z = PathCommand "z"
 
 data Align = Min | Mid | Max
 
@@ -237,7 +313,7 @@ r :: forall s i. Number -> IProp (r :: Number | s) i
 r = attr (AttrName "r") <<< show
 
 viewBox :: forall r i. Number -> Number -> Number -> Number -> IProp (viewBox :: String | r) i
-viewBox x_ y_ w h = attr (AttrName "viewBox") (joinWith " " $ map show [x_, y_, w, h])
+viewBox x_ y_ w h_ = attr (AttrName "viewBox") (joinWith " " $ map show [x_, y_, w, h_])
 
 preserveAspectRatio :: forall r i. Maybe {x_ :: Align, y_ :: Align} -> MeetOrSlice -> IProp (preserveAspectRatio :: String | r) i
 preserveAspectRatio align slice =
@@ -286,8 +362,11 @@ fill = attr (AttrName "fill") <<< printColor
 transform :: forall r i . Array Transform -> IProp (transform :: String | r) i
 transform = attr (AttrName "transform") <<< joinWith " " <<< map printTransform
 
-d :: forall r i . Array D -> IProp (d :: String | r) i
-d = attr (AttrName "d") <<< joinWith " " <<< map printD
+d :: forall r i . Array PathCommand -> IProp (d :: String | r) i
+d = attr (AttrName "d") <<< joinWith " " <<< unwrapNewtype
+  where
+    unwrapNewtype :: Array PathCommand -> Array String
+    unwrapNewtype = unsafeCoerce
 
 text_anchor :: forall r i . TextAnchor -> IProp (text_anchor :: String | r) i
 text_anchor = attr (AttrName "text-anchor") <<< printTextAnchor
@@ -337,8 +416,8 @@ data DurationF a = Duration (Maybe a) (Maybe a) (Maybe a) (Maybe a) -- ^ TODO ho
 derive instance functorDurationF :: Functor DurationF
 
 printDurationF :: forall a. Show a => DurationF a -> String
-printDurationF (Duration h m s i) = f "h" h <> f "m" m <> f "s" s <> f "i" i
-  where f u = maybe "" (\v -> show v <> u)
+printDurationF (Duration h_ m_ s_ i) = f "h" h_ <> f "m" m_ <> f "s" s_ <> f "i" i
+  where f u = maybe "" (\val -> show val <> u)
 
 type Duration = DurationF Number
 
@@ -349,7 +428,7 @@ printDuration = printDurationF
 
 -- TODO add other constructors
 seconds :: Number -> Duration
-seconds s = Duration Nothing Nothing (Just s) Nothing
+seconds s_ = Duration Nothing Nothing (Just s_) Nothing
 
 data FillState = Freeze | Remove
 
@@ -391,5 +470,8 @@ xlinkHref :: forall r i. String -> IProp (xlinkHref :: String | r) i
 xlinkHref = attrNS (Namespace "xlink") (AttrName "xlink:href")
 
 -- TODO copied from `d`; adapt where needed
-path :: forall r i . Array D -> IProp (path :: String | r) i
-path = attr (AttrName "path") <<< joinWith " " <<< map printD
+path :: forall r i . Array PathCommand -> IProp (path :: String | r) i
+path = attr (AttrName "path") <<< joinWith " " <<< unwrapNewtype
+  where
+    unwrapNewtype :: Array PathCommand -> Array String
+    unwrapNewtype = unsafeCoerce
