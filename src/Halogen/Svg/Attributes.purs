@@ -16,6 +16,10 @@ module Halogen.Svg.Attributes
   , PathCommand -- constructor not exported
   , printPathCommand
   , CommandPositionReference(..)
+  , CommandArcChoice(..)
+  , printCommandArcChoice
+  , CommandSweepChoice(..)
+  , printCommandSweepChoice
   , m, l, h, v, c, s, q, t, a, z
   , Align(..)
   , printAlign
@@ -228,6 +232,39 @@ printPathCommand :: PathCommand -> String
 printPathCommand (PathCommand s_) = s_
 
 data CommandPositionReference = Rel | Abs
+derive instance eqCommandPositionReference :: Eq CommandPositionReference
+instance showCommandPositionReference :: Show CommandPositionReference where
+  show = case _ of
+    Abs -> "Abs"
+    Rel -> "Rel"
+
+-- | Arc0 = Small arc
+-- | Arc1 = Large arc
+data CommandArcChoice = Arc0 | Arc1
+derive instance eqCommandArcChoice :: Eq CommandArcChoice
+instance showCommandArcChoice :: Show CommandArcChoice where
+  show = case _ of
+    Arc0 -> "Arc0"
+    Arc1 -> "Arc1"
+
+printCommandArcChoice :: CommandArcChoice -> String
+printCommandArcChoice = case _ of
+  Arc0 -> "0"
+  Arc1 -> "1"
+
+-- | Sweep0 = Counter-Clockwise / Negative
+-- | Sweep1 = Clockwise / Positive
+data CommandSweepChoice = Sweep0 | Sweep1
+derive instance eqCommandSweepChoice :: Eq CommandSweepChoice
+instance showCommandSweepChoice :: Show CommandSweepChoice where
+  show = case _ of
+    Sweep0 -> "Sweep0"
+    Sweep1 -> "Sweep1"
+
+printCommandSweepChoice :: CommandSweepChoice -> String
+printCommandSweepChoice = case _ of
+  Sweep0 -> "0"
+  Sweep1 -> "1"
 
 -- For internal use. Do not export.
 renderCommand :: CommandPositionReference -> String -> String
@@ -276,10 +313,10 @@ q = renderCommand4Args "q"
 t :: CommandPositionReference -> Number -> Number -> PathCommand
 t = renderCommand2Args "t"
 
-a :: CommandPositionReference -> Number -> Number -> Number -> Boolean -> Boolean -> Number -> Number -> PathCommand
-a ref rx_ ry_ rot large sweep x_ y_ = PathCommand $ (renderCommand ref "a") <>
+a :: CommandPositionReference -> Number -> Number -> Number -> CommandArcChoice -> CommandSweepChoice -> Number -> Number -> PathCommand
+a ref rx_ ry_ rot arc sweep x_ y_ = PathCommand $ (renderCommand ref "a") <>
   show rx_ <> ", " <> show ry_ <> ", " <> show rot <>
-  (if large then "0" else "1") <> " " <> (if sweep then "0" else "1") <>
+  (printCommandArcChoice arc) <> " " <> (printCommandSweepChoice sweep) <>
   show x_ <> " " <> show y_
 
 z :: PathCommand
