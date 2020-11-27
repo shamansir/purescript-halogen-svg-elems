@@ -220,6 +220,9 @@ printTransform = case _ of
     "skewY(" <> show a_ <> ")"
 
 newtype PathCommand = PathCommand String
+derive instance eqPathCommand :: Eq PathCommand
+instance showPathCommand :: Show PathCommand where
+  show val = printPathCommand val
 
 printPathCommand :: PathCommand -> String
 printPathCommand (PathCommand s_) = s_
