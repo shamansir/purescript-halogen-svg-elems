@@ -76,7 +76,7 @@ import Data.String (joinWith, toUpper)
 
 import Halogen.Svg.Core as Core
 
-import Halogen.HTML.Core (Prop, AttrName(AttrName), Namespace(Namespace))
+import Halogen.HTML.Core (Prop, AttrName(AttrName), Namespace(Namespace), ClassName(..))
 import Halogen.HTML.Properties (IProp, attrNS)
 import Unsafe.Coerce (unsafeCoerce)
 
