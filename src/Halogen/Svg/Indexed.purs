@@ -76,6 +76,20 @@ type GlobalEventAttributes r =
   , onMouseOver :: MouseEvent
   , onMouseUp :: MouseEvent
   , onWheel :: WheelEvent
+  | r)
+
+-- These can also be done with CSS
+type PresentationAttributes r =
+  ( stroke :: String
+  , strokeWidth :: Number
+  , fill :: String
+  | r
+  )
+
+type MarkerAttributes r =
+  ( markerStart :: String
+  , markerMid :: String
+  , markerEnd :: String
   | r
   )
 
@@ -105,13 +119,6 @@ type StrokeJoinAttributes r =
 type FillAttributes r =
   ( fill :: String
   , fillOpacity :: Number
-  | r
-  )
-
-type MarkerAttributes r =
-  ( markerStart :: String
-  , markerMid :: String
-  , markerEnd :: String
   | r
   )
 
