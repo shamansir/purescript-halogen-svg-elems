@@ -4,8 +4,20 @@ You can edit this file as you like.
 -}
 { name = "halogen-svg"
 , dependencies =
-  [ "halogen"
+  [ "aff"
+  , "console"
+  , "effect"
+  , "halogen"
+  , "halogen-vdom"
+  , "maybe"
+  , "newtype"
+  , "prelude"
   , "psci-support"
+  , "strings"
+  , "typelevel-prelude"
+  , "unsafe-coerce"
+  , "web-html"
+  , "web-uievents"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]
