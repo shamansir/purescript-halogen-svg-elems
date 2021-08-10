@@ -156,6 +156,7 @@ type SVGforeignObject
     , y :: Number
     , height :: Number
     , width :: Number
+    , style :: Number
     )
 
 type SVGmarker
