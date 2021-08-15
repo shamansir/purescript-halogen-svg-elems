@@ -39,6 +39,7 @@ module Halogen.Svg.Attributes
   , font_variant
   , font_weight
   , from, to
+  , href
   , id
   , markerStart, markerMid, markerEnd
   , markerUnits
@@ -294,6 +295,9 @@ x2 = attr (H.AttrName "x2") <<< show
 
 y2 :: forall r i. Number -> IProp (y2 :: Number | r) i
 y2 = attr (H.AttrName "y2") <<< show
+
+href :: forall r i. String -> IProp ( href :: String | r ) i
+href = attr (H.AttrName "href")
 
 -- TODO xlink:href seems to have some issues, among others around its namespace
 xlinkHref :: forall r i. String -> IProp (xlinkHref :: String | r) i

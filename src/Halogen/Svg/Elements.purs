@@ -3,6 +3,7 @@ module Halogen.Svg.Elements
   , svg
   , g
   , circle
+  , image
   , ellipse
   , rect
   , path
@@ -43,6 +44,9 @@ g = element $ ElemName "g"
 
 circle :: forall p i. Leaf I.SVGcircle p i
 circle props = element (ElemName "circle") props []
+
+image :: forall p i. Leaf I.SVGimage p i
+image props = element (ElemName "image") props []
 
 ellipse :: forall p i. Leaf I.SVGellipse p i
 ellipse props = element (ElemName "ellipse") props []
