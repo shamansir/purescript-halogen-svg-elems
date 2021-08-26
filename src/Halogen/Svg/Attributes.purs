@@ -14,6 +14,7 @@ module Halogen.Svg.Attributes
   , module Halogen.Svg.Attributes.FillState
   , module Halogen.Svg.Attributes.FontSize
   , module Halogen.Svg.Attributes.MarkerUnit
+  , module Halogen.Svg.Attributes.MaskUnit
   , module Halogen.Svg.Attributes.MeetOrSlice
   , module Halogen.Svg.Attributes.Orient
   , module Halogen.Svg.Attributes.Path
@@ -44,6 +45,7 @@ module Halogen.Svg.Attributes
   , markerStart, markerMid, markerEnd
   , markerUnits
   , markerWidth, markerHeight
+  , mask, maskUnits, maskContentUnits
   , orient
   , path
   , preserveAspectRatio
@@ -86,6 +88,7 @@ import Halogen.Svg.Attributes.Duration ( Duration, printDuration
 import Halogen.Svg.Attributes.FillState (FillState(..), printFillState)
 import Halogen.Svg.Attributes.FontSize (FontSize(..), printFontSize)
 import Halogen.Svg.Attributes.MarkerUnit (MarkerUnit(..), printMarkerUnit)
+import Halogen.Svg.Attributes.MaskUnit (MaskUnit(..), printMaskUnit)
 import Halogen.Svg.Attributes.MeetOrSlice (MeetOrSlice(..), printMeetOrSlice)
 import Halogen.Svg.Attributes.Orient (Orient(..), printOrient)
 import Halogen.Svg.Attributes.TextAnchor (TextAnchor(..), printTextAnchor)
@@ -197,6 +200,15 @@ markerWidth = attr (H.AttrName "markerWidth") <<< show
 
 markerHeight :: forall r i. Number -> IProp (markerHeight :: Number | r) i
 markerHeight = attr (H.AttrName "markerHeight") <<< show
+
+mask :: forall s i. String -> IProp (mask :: String | s) i
+mask = attr (H.AttrName "mask")
+
+maskUnits :: forall r i. MaskUnit -> IProp (maskUnits :: String | r) i
+maskUnits = attr (H.AttrName "maskUnits") <<< printMaskUnit
+
+maskContentUnits :: forall r i. MaskUnit -> IProp (maskContentUnits :: String | r) i
+maskContentUnits = attr (H.AttrName "maskContentUnits") <<< printMaskUnit
 
 orient :: forall r i. Orient -> IProp (orient :: String | r) i
 orient = attr (H.AttrName "orient") <<< printOrient

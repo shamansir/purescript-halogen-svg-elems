@@ -8,6 +8,7 @@ module Halogen.Svg.Indexed
   , FillAttributes
   , MarkerAttributes
   , FontAttributes
+  , CanBeMaskedAttributes
   , AllPresentationAttributes
   , SVGsvg
   , SVGg
@@ -127,9 +128,14 @@ type FontAttributes r =
   | r
   )
 
+type CanBeMaskedAttributes r =
+  ( mask :: String
+  | r
+  )
+
 type AllPresentationAttributes r
   = StrokeAttributes + StrokeJoinAttributes + StokeEndAttributes
-  + FillAttributes + FontAttributes + MarkerAttributes + r
+  + FillAttributes + FontAttributes + MarkerAttributes + CanBeMaskedAttributes + r
 
 -- Specific SVG elements -------------------------------------------------------
 type SVGsvg
@@ -163,8 +169,19 @@ type SVGmarker
     , markerUnits :: String
     )
 
+type SVGmask
+  = GlobalAttributes + AllPresentationAttributes
+  + ( transform :: String
+    , x :: Number
+    , y :: Number
+    , width :: Number
+    , height :: Number
+    , maskUnits :: String
+    , maskContentsUnits :: String
+    )
+
 type SVGcircle
-  = GlobalAttributes + StrokeAttributes + FillAttributes + MarkerAttributes
+  = GlobalAttributes + CanBeMaskedAttributes + StrokeAttributes + FillAttributes + MarkerAttributes
   + ( cx :: Number
     , cy :: Number
     , r :: Number
@@ -172,7 +189,7 @@ type SVGcircle
     )
 
 type SVGellipse
-  = GlobalAttributes + StrokeAttributes + FillAttributes + MarkerAttributes
+  = GlobalAttributes + CanBeMaskedAttributes + StrokeAttributes + FillAttributes + MarkerAttributes
   + ( cx :: Number
     , cy :: Number
     , rx :: Number
@@ -181,7 +198,7 @@ type SVGellipse
     )
 
 type SVGline
-  = GlobalAttributes + StrokeAttributes + StokeEndAttributes + MarkerAttributes
+  = GlobalAttributes + CanBeMaskedAttributes + StrokeAttributes + StokeEndAttributes + MarkerAttributes
   + ( x1 :: Number
     , y1 :: Number
     , x2 :: Number
@@ -190,14 +207,14 @@ type SVGline
     )
 
 type SVGpath
-  = GlobalAttributes + StrokeAttributes + StokeEndAttributes
+  = GlobalAttributes + CanBeMaskedAttributes + StrokeAttributes + StokeEndAttributes
   + StrokeJoinAttributes + FillAttributes + MarkerAttributes
   + ( d :: String
     , transform :: String
     )
 
 type SVGrect
-  = GlobalAttributes + StrokeAttributes + StrokeJoinAttributes
+  = GlobalAttributes + CanBeMaskedAttributes + StrokeAttributes + StrokeJoinAttributes
   + FillAttributes + MarkerAttributes
   + ( x :: Number
     , y :: Number
@@ -209,7 +226,7 @@ type SVGrect
     )
 
 type SVGtext
-  = GlobalAttributes + StrokeAttributes + StokeEndAttributes
+  = GlobalAttributes + CanBeMaskedAttributes + StrokeAttributes + StokeEndAttributes
   + StrokeJoinAttributes + FillAttributes + FontAttributes
   + ( x :: Number
     , y :: Number

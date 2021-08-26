@@ -11,6 +11,7 @@ module Halogen.Svg.Elements
   , text
   , foreignObject
   , defs
+  , mask
   , marker
   , animate
   , animateMotion
@@ -68,6 +69,9 @@ foreignObject = element (ElemName "foreignObject")
 
 defs :: forall p i. Node I.SVGg p i
 defs = element $ ElemName "defs"
+
+mask :: forall p i. Node I.SVGg p i
+mask = element $ ElemName "mask"
 
 marker :: forall p i. Node I.SVGmarker p i
 marker = element $ ElemName "marker"
