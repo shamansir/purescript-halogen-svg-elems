@@ -1,7 +1,7 @@
 "use strict";
 // module Svg.Util
 
-exports._beginElements = function (cssSelectorStr) {
+const beginElements = function (cssSelectorStr) {
   return function (onError, onSuccess) {
     console.log('beginElementsAff: cssSelectorStr =', cssSelectorStr);
     const elems = document.querySelectorAll(cssSelectorStr);
@@ -22,7 +22,7 @@ exports._beginElements = function (cssSelectorStr) {
   };
 }
 
-exports.domToSvgCoordinates = function (svg) {
+const domToSvgCoordinates_ = function (svg) {
   return function (point) {
     const svgPoint = svg.createSVGPoint();
 
@@ -37,3 +37,6 @@ exports.domToSvgCoordinates = function (svg) {
     };
   };
 }
+
+export const _beginElements = beginElements;
+export const domToSvgCoordinates = domToSvgCoordinates_;
